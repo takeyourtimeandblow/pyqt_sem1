@@ -18,8 +18,7 @@ Enter Your nickname""")
 
 		self.lineEdit.setFocus()
 	
-	def accept(self):
-		#scores.csv
+	def accept(self): #User presed OK. Their score will be saved to scores.csv
 		input_file = 'scores.csv'
 		output_file = 'scores.csv'
 
@@ -28,13 +27,10 @@ Enter Your nickname""")
 		
 		new_data = {'NAME': [self.lineEdit.text()], 'HISCORE': [self.score]}
 		new_row_df = pd.DataFrame(new_data)
-
-		# Replace values in the specified column
+		
 		df = pd.concat([df, new_row_df], ignore_index=True)
 		self.close()
 		
 
 		# Save the modified DataFrame back to a CSV file
 		df.to_csv(output_file, index=False)
-		
-	#def 
