@@ -10,7 +10,6 @@ import pandas as pd
 def read_data(fname):
 	return pd.read_csv(fname).to_dict()
  
-#Main Window
 class PlatinumScoreTable(QWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
@@ -26,7 +25,6 @@ class PlatinumScoreTable(QWidget):
 	#Create table
 	def createTable(self):
 		self.data = read_data('scores.csv')
-		#del self.data['Unnamed: 8']
 		
 		rows = len(max(self.data.values(), key=len))
 		cols = len(self.data)
@@ -61,3 +59,4 @@ if __name__ == '__main__':
 	ex = PlatinumScoreTable()
 	ex.show()
 	sys.exit(app.exec_())
+
