@@ -13,12 +13,12 @@ class PlatinumSupernovaMain(QMainWindow):
 		super().__init__()
 		uic.loadUi("pl_main.ui", self)
 		
-		self.centralwidget.setLayout(self.mainL)
+		self.centralwidget.setLayout(self.mainL) # set layout if we want to stretch all project
 		
 		self.gameFrame = PlatinumGameFrame(parent=self)
 		
 		
-		self.verticalLayout.insertWidget(0, self.gameNameWidget)
+		#self.verticalLayout.insertWidget(0, self.gameNameWidget)
 		
 		self.gameNameWidget.setVisible(False)
 		self.tableShowed = False 
@@ -32,7 +32,7 @@ class PlatinumSupernovaMain(QMainWindow):
 		self.gameFrame.setFocus()
 		self.gameFrame.startTimers()
 	
-	def showScoresToggle(self, _):
+	def showScoresToggle(self, _): #shows scores
 		if self.tableShowed:
 			self.gameNameWidget.setVisible(False)
 			self.tableShowed = False
@@ -49,4 +49,5 @@ def main():
 	sys.exit(app.exec_())
 
 if __name__ == "__main__":
+
 	main()
