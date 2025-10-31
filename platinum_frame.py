@@ -28,7 +28,7 @@ def resource_path(relative_path):
             base_path = os.path.abspath(".")
         return os.path.join(base_path, relative_path)
 
-#function taked from https://stackoverflow.com/questions/54556158/keypressevent-in-pyqt (modified)
+#function is taken from https://stackoverflow.com/questions/54556158/keypressevent-in-pyqt (modified)
 def check_intersection(el, rect):
 	#print (el, rect)
 	return rect[0] <= el[0] <= rect[2] and rect[1] <= el[1] <= rect[3] or \
@@ -122,11 +122,11 @@ class PlatinumGameFrame(QWidget):
 	def thread(self):
 		self.update_player_position()
 		
-	def fireCoolDownFunc(self):
+	def fireCoolDownFunc(self): #When player can fire again
 		self.fireCoolDowned = True
 	
 	def update_player_position(self):
-		if self.key_states[Qt.Key_Space]:
+		if self.key_states[Qt.Key_Space]: # space is fire
 			self.shoot()
 		if self.key_states[Qt.Key_Up]: self.dy = -self.max_speed
 		if self.key_states[Qt.Key_Down]: self.dy = self.max_speed
@@ -152,27 +152,26 @@ class PlatinumGameFrame(QWidget):
 			self.hero.x = x
 			self.hero.y = y
 			
-		if not self.hero.invincible:
+		if not self.hero.invincible: # checks if player is invincible and if they touched Enemy bullet
 			for b in enemy_bullets:
 				if check_intersection([b.x, b.y, b.x+10, b.y+10], [self.hero.x, self.hero.y, self.hero.x+self.heroTexture.size().width(), self.hero.y+self.heroTexture.size().height()]):
 					self.hero.take_damage(b)
 					if not self.hero.is_alive():
 						self.game_over()
-					self.hero.invincible = True
+					self.hero.invincible = True # gives player invincibilty after being hit
 					self.heroTexture.setStyleSheet("background-color: transparent;")
 					self.timerDamageImmunity.start(2000)
 	
 	def shoot(self):
 		if self.fireCoolDowned:
-			player_bullets.append(Entity(cns.PLAYER_BULLET, x=self.hero.x, y=self.hero.y))
+			player_bullets.append(Entity(cns.PLAYER_BULLET, x=self.hero.x, y=self.hero.y)) #adds info about bullets on screen
 			
-			media = QUrl.fromLocalFile('shot.mp3')
+			media = QUrl.fromLocalFile('shot.mp3') # sound of fire
 			content = QtMultimedia.QMediaContent(media)
 			self.player.setMedia(content)
 			self.player.play()
 
 			self.fireCoolDowned = False
-		#print(f'player_bullets {player_bullets}') 
 		
 	def enemyShoot(self):
 		if enemies:
@@ -215,7 +214,6 @@ class PlatinumGameFrame(QWidget):
 		self.update()
 
 	def paintEvent(self, event):
-		# Переопределяем метод paintEvent для рисования
 		super().paintEvent(event)
 
 		painter = QPainter(self)
@@ -225,7 +223,6 @@ class PlatinumGameFrame(QWidget):
 		
 		
 	def update_enemy_position(self):
-		#print('update_enemy_position called')
 		if not enemies:
 			return
 		
@@ -246,7 +243,7 @@ class PlatinumGameFrame(QWidget):
 					e[0].y = dy
 				e[1].move(e[0].x, e[0].y)
 			if player_bullets:
-				for b in player_bullets:
+				for b in player_bullets: # check if enemy touched player's bullet
 					if check_intersection([b.x, b.y, b.x+self.hero.power, b.y+self.hero.power], [e[1].x(), e[1].y(), e[1].x()+e[1].size().width(), e[1].y()+e[1].size().height()]):
 						e[0].take_damage(b)
 						if not e[0].is_alive():
@@ -262,7 +259,6 @@ class PlatinumGameFrame(QWidget):
 	
 	def respawnEnemies(self):
 		enemies.append([Enemy(x=randint(40, 240), y=randint(40, 240)), None])
-		#print(f'enemies {enemies}')
 		
 	def setPlayerInvincible(self):
 		self.hero.invincible = False
@@ -270,7 +266,7 @@ class PlatinumGameFrame(QWidget):
 		self.heroTexture.setStyleSheet(f"background-image: url(\"heroTexture.png\");")
 		self.timerDamageImmunity.stop()
 		
-	def game_over(self):
+	def game_over(self): # The game is over
 		self.game_is_over = True
 		self.stopTimers()
 		
